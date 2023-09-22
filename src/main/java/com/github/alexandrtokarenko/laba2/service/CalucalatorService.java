@@ -21,19 +21,15 @@ public class CalucalatorService {
     private double b = 9;
 
     public void calculate(int numberOfIntervals, int numberOfThreads) throws ExecutionException, InterruptedException {
-        finished = 0;
-        totalSum = 0;
-        long start = System.currentTimeMillis();
-        long finish;
 
         double delta = (b - a) / numberOfThreads;
         ExecutorService es = Executors.newFixedThreadPool(numberOfThreads);
 
         List<Future<Double>> futures = new ArrayList<>();
-
+        long start = System.currentTimeMillis();
+        long finish;
         for (int i = 0; i < numberOfThreads; i++) {
-            final int threadNumber = i;
-            futures.add(es.submit(new CalcCallable(a+threadNumber * delta,a + (threadNumber + 1) * delta,numberOfIntervals / numberOfThreads)));
+            futures.add(es.submit(new CalcCallable(a+ i * delta,a + (i + 1) * delta,numberOfIntervals / numberOfThreads)));
         }
 
         for (Future<Double> future : futures) {
